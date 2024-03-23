@@ -20,16 +20,15 @@ function App() {
    */
   const [currentDate, setCurrentDate] = useState("");
   const [loading, setLoading] = useState(false);
-  const [currentWeatherData, setCurrentWeatherData] = useState([]);
+  const [currentWeatherData, setCurrentWeatherData] = useState("");
   const [countryValue, setCountryValue] = useState("");
-  const [ciryNameData, setCityNameData] = useState("");
   const citys = ["Seoul", "Tokyo", "Dubai", "Paris"];
   const selectUi = ["화창", "비", "눈", "흐림"];
   const formattedValue = (value) => {
     return value < 10 ? `0${value}` : value;
   };
 
-  console.log(ciryNameData);
+  console.log("App", currentWeatherData);
 
   useEffect(() => {
     const getDate = () => {
@@ -63,19 +62,27 @@ function App() {
       }
     };
 
-    const getCirtNameData = async () => {
+    /**
+     * 데이터의 구조는 동일
+     * useEffect 시에 호출한 Api 주소를 각 도시별 Api 주소로 변경
+     * 각 도시별 Api에 따른 Ui 변경 이루어짐
+     */
+    const fetchCityNameData = async () => {
       try {
-        const $getCityNameData = await getCityNameData(countryValue);
+        const cityNameData = await getCityNameData(countryValue);
 
-        setCityNameData($getCityNameData);
+        setCurrentWeatherData(cityNameData);
         setLoading(true);
       } catch (err) {
         throw Error(err.message);
       }
     };
 
-    getCirtNameData();
-    getLatAndLog();
+    if (countryValue == "") {
+      getLatAndLog();
+    } else {
+      fetchCityNameData();
+    }
   }, [countryValue]);
 
   return (

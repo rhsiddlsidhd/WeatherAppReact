@@ -29,20 +29,36 @@ const WeatherMain = () => {
         </FigureHourForecast>
         <AsideBtns>
           <StyleBox width="45%" height="100%" $btnContainer>
-            <div className="btnTitle">title</div>
+            <div className="btnTitle">
+              <div>title</div>
+              <StyleButton width="1rem" height="100%">
+                reset
+              </StyleButton>
+            </div>
             <div className="btns">
-              {selectUi.map((it) => (
-                <StyleButton key={it} value={it}>
+              {selectUi.map((it, index) => (
+                <StyleButton key={index} value={it} width="4rem" height="2rem">
                   {it}
                 </StyleButton>
               ))}
             </div>
           </StyleBox>
           <StyleBox width="45%" height="100%" $btnContainer>
-            <div className="btnTitle">13</div>
+            <div className="btnTitle">
+              <div>title</div>
+              <StyleButton width="1rem" height="100%">
+                reset
+              </StyleButton>
+            </div>
             <div className="btns">
-              {citys.map((it) => (
-                <StyleButton key={it} value={it} onClick={test}>
+              {citys.map((it, index) => (
+                <StyleButton
+                  key={index}
+                  value={it}
+                  onClick={test}
+                  width="4rem"
+                  height="2rem"
+                >
                   {it}
                 </StyleButton>
               ))}

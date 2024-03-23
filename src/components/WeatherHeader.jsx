@@ -7,7 +7,7 @@ import Loading from "./Loading";
 const WeatherHeader = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { currentWeatherData, loading } = useContext(CurrentWeatherDataContext);
-  // console.log(currentWeatherData);
+
   const { name, weather, main } = currentWeatherData;
 
   const weatherMain = weather ? weather[0]?.main : "";
@@ -67,11 +67,6 @@ const WeatherHeader = () => {
   const indexCounter = () => {
     setCurrentIndex((currentIndex + 1) % $formattedTempData.length);
   };
-
-  /**
-   * 데이터를 불러오지 못했을 경우 로딩 이미지를 보여주고
-   * 데이터를 다 가져왔으면 로딩이미지를 지우고 데이터를 보여줘
-   */
 
   return (
     <Header>

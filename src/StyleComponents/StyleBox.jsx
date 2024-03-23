@@ -30,16 +30,20 @@ const BoxContainer = styled.div.attrs((props) => ({
       > .btnTitle {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         height: 15%;
         padding-left: 1rem;
+        padding-right: 1rem;
         color: ${({ theme }) => theme.color.gray};
         border-bottom: 1px solid ${({ theme }) => theme.color.white};
       }
       > .btns {
         height: 85%;
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
+        padding-left: 1rem;
+        padding-right: 1rem;
       }
     `}
 

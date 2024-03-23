@@ -19,6 +19,7 @@ function App() {
    * 현재 시간 구하기
    */
   const [currentDate, setCurrentDate] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const formattedValue = (value) => {
     return value < 10 ? `0${value}` : value;
@@ -51,6 +52,7 @@ function App() {
 
         const $weatherData = await getWeatherData($lat, $lon);
         setCurrentWeatherData($weatherData);
+        setLoading(false);
       });
     } catch (e) {
       throw Error(e.message);
@@ -62,7 +64,7 @@ function App() {
   }, []);
 
   return (
-    <CurrentWeatherDataContext.Provider value={currentWeatherData}>
+    <CurrentWeatherDataContext.Provider value={{ currentWeatherData, loading }}>
       <div className="App">
         <div className="weather_app">
           <CurrentTime>{currentDate}</CurrentTime>

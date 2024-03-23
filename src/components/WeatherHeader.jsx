@@ -2,10 +2,13 @@ import React, { useContext, useState } from "react";
 import styled, { css } from "styled-components";
 import { CurrentWeatherDataContext } from "../App";
 import StyleButton from "../StyleComponents/StyleButton";
+import Loading from "./Loading";
 
 const WeatherHeader = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const data = useContext(CurrentWeatherDataContext);
+  console.log(data);
+  const loading = useContext(CurrentWeatherDataContext);
   const { name, weather, main } = data;
   const weatherMain = weather ? weather[0]?.main : "";
   const $main = main ? main : "";
@@ -19,6 +22,7 @@ const WeatherHeader = () => {
    * 데이터는 한번만 저장하고 저장한 데이터를 가지고 순회
    * 각 데이터의 max 와 min까지 관리해야 해서 데이터를 객체로 전환
    * 객체로 전환한 값을 object.values 값들로 배열로 바꿔서 다시 무한순회
+   *
    */
 
   const convertKelvinTemperature = (tempValues) => {
@@ -63,42 +67,51 @@ const WeatherHeader = () => {
     setCurrentIndex((currentIndex + 1) % $formattedTempData.length);
   };
 
+  /**
+   * 데이터를 불러오지 못했을 경우 로딩 이미지를 보여주고
+   * 데이터를 다 가져왔으면 로딩이미지를 지우고 데이터를 보여줘
+   */
+
   return (
     <Header>
-      <CurrentWeather>
-        <div className="title">{name}</div>
-        <div className="temperature">
-          <input
-            className="temperature_calvin"
-            value={
-              $formattedTempData[currentIndex]
-                ? `${$formattedTempData[currentIndex].temp}`
-                : $main.temp
-            }
-            readOnly
-          ></input>
-          <StyleButton
-            className="temperature_btn"
-            width={"fit-content"}
-            onClick={indexCounter}
-          >
-            Temperature
-          </StyleButton>
-        </div>
-        <div className="weather">{weatherMain}</div>
-        <div className="temperature_high_low">
-          <div>
-            {$formattedTempData[currentIndex]
-              ? `${$formattedTempData[currentIndex].temp_max}`
-              : $main.temp}
+      {loading ? (
+        <CurrentWeather>
+          <div className="title">{name}</div>
+          <div className="temperature">
+            <input
+              className="temperature_calvin"
+              value={
+                $formattedTempData[currentIndex]
+                  ? `${$formattedTempData[currentIndex].temp}`
+                  : $main.temp
+              }
+              readOnly
+            ></input>
+            <StyleButton
+              className="temperature_btn"
+              width={"fit-content"}
+              onClick={indexCounter}
+            >
+              Temperature
+            </StyleButton>
           </div>
-          <div>
-            {$formattedTempData[currentIndex]
-              ? `${$formattedTempData[currentIndex].temp_min}`
-              : $main.temp}
+          <div className="weather">{weatherMain}</div>
+          <div className="temperature_high_low">
+            <div>
+              {$formattedTempData[currentIndex]
+                ? `${$formattedTempData[currentIndex].temp_max}`
+                : $main.temp}
+            </div>
+            <div>
+              {$formattedTempData[currentIndex]
+                ? `${$formattedTempData[currentIndex].temp_min}`
+                : $main.temp}
+            </div>
           </div>
-        </div>
-      </CurrentWeather>
+        </CurrentWeather>
+      ) : (
+        <Loading />
+      )}
     </Header>
   );
 };

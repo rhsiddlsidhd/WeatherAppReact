@@ -5,7 +5,11 @@ const Loading = () => {
 
   return (
     <>
-      <img src={`${imgPath}/Loading.gif`} style={{ width: "50px" }}></img>
+      <img
+        src={`${imgPath}/Loading.gif`}
+        alt="이미지"
+        style={{ width: "50px" }}
+      />
     </>
   );
 };

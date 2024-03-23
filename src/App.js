@@ -19,7 +19,8 @@ function App() {
    * 현재 시간 구하기
    */
   const [currentDate, setCurrentDate] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [countryValue, setCountryValue] = useState("");
 
   const formattedValue = (value) => {
     return value < 10 ? `0${value}` : value;
@@ -49,10 +50,9 @@ function App() {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const $lat = position.coords.latitude;
         const $lon = position.coords.longitude;
-
-        const $weatherData = await getWeatherData($lat, $lon);
+        const $weatherData = await getWeatherData($lat, $lon, countryValue);
         setCurrentWeatherData($weatherData);
-        setLoading(false);
+        setLoading(true);
       });
     } catch (e) {
       throw Error(e.message);
@@ -61,10 +61,12 @@ function App() {
 
   useEffect(() => {
     getLatAndLog();
-  }, []);
+  }, [countryValue]);
 
   return (
-    <CurrentWeatherDataContext.Provider value={{ currentWeatherData, loading }}>
+    <CurrentWeatherDataContext.Provider
+      value={{ currentWeatherData, loading, setCountryValue }}
+    >
       <div className="App">
         <div className="weather_app">
           <CurrentTime>{currentDate}</CurrentTime>

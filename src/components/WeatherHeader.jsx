@@ -6,11 +6,12 @@ import Loading from "./Loading";
 
 const WeatherHeader = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const data = useContext(CurrentWeatherDataContext);
-  console.log(data);
-  const loading = useContext(CurrentWeatherDataContext);
-  const { name, weather, main } = data;
+  const { currentWeatherData, loading } = useContext(CurrentWeatherDataContext);
+
+  const { name, weather, main } = currentWeatherData;
+
   const weatherMain = weather ? weather[0]?.main : "";
+
   const $main = main ? main : "";
 
   /**

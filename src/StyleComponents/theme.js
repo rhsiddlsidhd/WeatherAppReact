@@ -13,15 +13,6 @@ const fontSize = {
   xlg: "3rem",
 };
 
-const lightversion = {
-  background: "#fff",
-  fontPrimary: "black",
-  fontSecondary: "gray",
-  primary: "#00a0ff",
-  secondary: "#ddd",
-  hover: "#00a0ff50",
-};
-
 const backgroundColor = {
   main: "#5356FF",
   second: "#378CE7",
@@ -39,7 +30,6 @@ const color = {
 const theme = {
   windowSize,
   fontSize,
-  lightversion,
   backgroundColor,
   color,
 };

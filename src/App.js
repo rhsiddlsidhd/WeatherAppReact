@@ -61,7 +61,7 @@ function App() {
 
   useEffect(() => {
     getLatAndLog();
-  }, [countryValue]);
+  }, []);
 
   return (
     <CurrentWeatherDataContext.Provider

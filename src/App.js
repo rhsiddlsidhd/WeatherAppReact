@@ -52,7 +52,7 @@ function App() {
         navigator.geolocation.getCurrentPosition(async (position) => {
           const $lat = position.coords.latitude;
           const $lon = position.coords.longitude;
-          const $weatherData = await getWeatherData($lat, $lon, countryValue);
+          const $weatherData = await getWeatherData($lat, $lon);
           setCurrentWeatherData($weatherData);
           setLoading(true);
         });
@@ -65,9 +65,7 @@ function App() {
   }, []);
 
   return (
-    <CurrentWeatherDataContext.Provider
-      value={{ currentWeatherData, loading, setCountryValue }}
-    >
+    <CurrentWeatherDataContext.Provider value={{ currentWeatherData, loading }}>
       <div className="App">
         <div className="weather_app">
           <CurrentTime>{currentDate}</CurrentTime>

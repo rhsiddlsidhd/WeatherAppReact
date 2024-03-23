@@ -5,10 +5,10 @@ import StyleButton from "../StyleComponents/StyleButton";
 import { CurrentWeatherDataContext } from "../App";
 
 const WeatherMain = () => {
-  const { setCountryValue } = useContext(CurrentWeatherDataContext);
+  // const { setCountryValue } = useContext(CurrentWeatherDataContext);
 
   const test = (e) => {
-    setCountryValue(e.target.value);
+    // setCountryValue(e.target.value);
   };
   return (
     <Main>

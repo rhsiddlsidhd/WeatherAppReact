@@ -46,6 +46,7 @@ function App() {
   const [currentWeatherData, setCurrentWeatherData] = useState([]);
 
   useEffect(() => {
+    // getLatAndLog();
     const getLatAndLog = () => {
       try {
         navigator.geolocation.getCurrentPosition(async (position) => {
@@ -59,6 +60,8 @@ function App() {
         throw Error(e.message);
       }
     };
+
+    getLatAndLog();
   }, []);
 
   return (

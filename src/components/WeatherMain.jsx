@@ -46,18 +46,6 @@ const WeatherMain = () => {
                   {it}
                 </StyleButton>
               ))}
-              {/* <StyleButton value="Seoul" onClick={test}>
-                Seoul
-              </StyleButton>
-              <StyleButton value="Tokyo" onClick={test}>
-                Tokyo
-              </StyleButton>
-              <StyleButton value="Dubai" onClick={test}>
-                Dubai
-              </StyleButton>
-              <StyleButton value="Paris" onClick={test}>
-                Paris
-              </StyleButton> */}
             </div>
           </StyleBox>
         </AsideBtns>

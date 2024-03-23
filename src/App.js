@@ -45,22 +45,20 @@ function App() {
 
   const [currentWeatherData, setCurrentWeatherData] = useState([]);
 
-  const getLatAndLog = () => {
-    try {
-      navigator.geolocation.getCurrentPosition(async (position) => {
-        const $lat = position.coords.latitude;
-        const $lon = position.coords.longitude;
-        const $weatherData = await getWeatherData($lat, $lon, countryValue);
-        setCurrentWeatherData($weatherData);
-        setLoading(true);
-      });
-    } catch (e) {
-      throw Error(e.message);
-    }
-  };
-
   useEffect(() => {
-    getLatAndLog();
+    const getLatAndLog = () => {
+      try {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          const $lat = position.coords.latitude;
+          const $lon = position.coords.longitude;
+          const $weatherData = await getWeatherData($lat, $lon, countryValue);
+          setCurrentWeatherData($weatherData);
+          setLoading(true);
+        });
+      } catch (e) {
+        throw Error(e.message);
+      }
+    };
   }, []);
 
   return (

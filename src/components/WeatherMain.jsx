@@ -1,15 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import styled, { css } from "styled-components";
 import StyleBox from "../StyleComponents/StyleBox";
 import StyleButton from "../StyleComponents/StyleButton";
-import { CurrentWeatherDataContext } from "../App";
 
 const WeatherMain = () => {
-  // const { setCountryValue } = useContext(CurrentWeatherDataContext);
-
-  const test = (e) => {
-    // setCountryValue(e.target.value);
-  };
   return (
     <Main>
       <ArticleHourForecast>
@@ -38,18 +32,10 @@ const WeatherMain = () => {
           <StyleBox width="45%" height="100%" $btnContainer>
             <div className="btnTitle">13</div>
             <div className="btns">
-              <StyleButton value="kr" onClick={test}>
-                Kr
-              </StyleButton>
-              <StyleButton value="ja" onClick={test}>
-                Jp
-              </StyleButton>
-              <StyleButton value="en" onClick={test}>
-                En
-              </StyleButton>
-              <StyleButton value="it" onClick={test}>
-                Fr
-              </StyleButton>
+              <StyleButton>Kr</StyleButton>
+              <StyleButton>Jp</StyleButton>
+              <StyleButton>En</StyleButton>
+              <StyleButton>Fr</StyleButton>
             </div>
           </StyleBox>
         </AsideBtns>

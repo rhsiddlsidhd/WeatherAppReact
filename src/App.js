@@ -20,7 +20,6 @@ function App() {
    */
   const [currentDate, setCurrentDate] = useState("");
   const [loading, setLoading] = useState(false);
-  const [countryValue, setCountryValue] = useState("");
 
   const formattedValue = (value) => {
     return value < 10 ? `0${value}` : value;

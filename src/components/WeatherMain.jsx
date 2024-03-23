@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled, { css } from "styled-components";
 import StyleBox from "../StyleComponents/StyleBox";
 import StyleButton from "../StyleComponents/StyleButton";
+import { CurrentWeatherDataContext, GetStateValueContext } from "../App";
 
 const WeatherMain = () => {
+  const { citys, selectUi } = useContext(CurrentWeatherDataContext);
+  const setCountryValue = useContext(GetStateValueContext);
+
+  const test = (e) => {
+    setCountryValue(e.target.value);
+  };
+
   return (
     <Main>
       <ArticleHourForecast>
@@ -23,19 +31,33 @@ const WeatherMain = () => {
           <StyleBox width="45%" height="100%" $btnContainer>
             <div className="btnTitle">title</div>
             <div className="btns">
-              <StyleButton>화창</StyleButton>
-              <StyleButton>비</StyleButton>
-              <StyleButton>눈</StyleButton>
-              <StyleButton>흐림</StyleButton>
+              {selectUi.map((it) => (
+                <StyleButton key={it} value={it}>
+                  {it}
+                </StyleButton>
+              ))}
             </div>
           </StyleBox>
           <StyleBox width="45%" height="100%" $btnContainer>
             <div className="btnTitle">13</div>
             <div className="btns">
-              <StyleButton>Kr</StyleButton>
-              <StyleButton>Jp</StyleButton>
-              <StyleButton>En</StyleButton>
-              <StyleButton>Fr</StyleButton>
+              {citys.map((it) => (
+                <StyleButton key={it} value={it} onClick={test}>
+                  {it}
+                </StyleButton>
+              ))}
+              {/* <StyleButton value="Seoul" onClick={test}>
+                Seoul
+              </StyleButton>
+              <StyleButton value="Tokyo" onClick={test}>
+                Tokyo
+              </StyleButton>
+              <StyleButton value="Dubai" onClick={test}>
+                Dubai
+              </StyleButton>
+              <StyleButton value="Paris" onClick={test}>
+                Paris
+              </StyleButton> */}
             </div>
           </StyleBox>
         </AsideBtns>

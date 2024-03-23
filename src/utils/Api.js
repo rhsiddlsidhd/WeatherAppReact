@@ -3,13 +3,26 @@ const APIKEY = process.env.REACT_APP_APIKEY;
 export const getWeatherData = async ($lat, $lon) => {
   try {
     const url = new URL(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${$lat}&lon=${$lon}&lang=kr&appid=${APIKEY}`
+      `https://api.openweathermap.org/data/2.5/weather?lat=${$lat}&lon=${$lon}&appid=${APIKEY}`
     );
 
     const res = await fetch(url);
     const data = res.json();
+    return data;
+  } catch (err) {
+    throw Error(err.message);
+  }
+};
 
-    // console.log(data);
+export const getCityNameData = async (countryValue) => {
+  try {
+    const url =
+      new URL(`https://api.openweathermap.org/data/2.5/weather?q=${countryValue}&appid=${APIKEY}
+  `);
+
+    const res = await fetch(url);
+    const data = res.json();
+
     return data;
   } catch (err) {
     throw Error(err.message);

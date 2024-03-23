@@ -3,7 +3,7 @@ import styled from "styled-components";
 import WeatherHeader from "./components/WeatherHeader";
 import WeatherMain from "./components/WeatherMain";
 import { createContext, useEffect, useState } from "react";
-import { getWeatherData } from "./utils/Api";
+import { getCityNameData, getWeatherData } from "./utils/Api";
 // https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
 //1. 앱이 실행되자마자 현재 위치기반의 날씨가 보인다
 //2. 도시 섭씨 화씨 날씨 상태정보
@@ -13,17 +13,23 @@ import { getWeatherData } from "./utils/Api";
 //6. 데이터를 들고오는 동안 로딩 스피너가 보인다.
 
 export const CurrentWeatherDataContext = createContext();
-
+export const GetStateValueContext = createContext();
 function App() {
   /**
    * 현재 시간 구하기
    */
   const [currentDate, setCurrentDate] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [currentWeatherData, setCurrentWeatherData] = useState([]);
+  const [countryValue, setCountryValue] = useState("");
+  const [ciryNameData, setCityNameData] = useState("");
+  const citys = ["Seoul", "Tokyo", "Dubai", "Paris"];
+  const selectUi = ["화창", "비", "눈", "흐림"];
   const formattedValue = (value) => {
     return value < 10 ? `0${value}` : value;
   };
+
+  console.log(ciryNameData);
 
   useEffect(() => {
     const getDate = () => {
@@ -42,10 +48,7 @@ function App() {
     }, 1000);
   }, []);
 
-  const [currentWeatherData, setCurrentWeatherData] = useState([]);
-
   useEffect(() => {
-    // getLatAndLog();
     const getLatAndLog = () => {
       try {
         navigator.geolocation.getCurrentPosition(async (position) => {
@@ -55,23 +58,39 @@ function App() {
           setCurrentWeatherData($weatherData);
           setLoading(true);
         });
-      } catch (e) {
-        throw Error(e.message);
+      } catch (err) {
+        throw Error(err.message);
       }
     };
 
+    const getCirtNameData = async () => {
+      try {
+        const $getCityNameData = await getCityNameData(countryValue);
+
+        setCityNameData($getCityNameData);
+        setLoading(true);
+      } catch (err) {
+        throw Error(err.message);
+      }
+    };
+
+    getCirtNameData();
     getLatAndLog();
-  }, []);
+  }, [countryValue]);
 
   return (
-    <CurrentWeatherDataContext.Provider value={{ currentWeatherData, loading }}>
-      <div className="App">
-        <div className="weather_app">
-          <CurrentTime>{currentDate}</CurrentTime>
-          <WeatherHeader />
-          <WeatherMain />
+    <CurrentWeatherDataContext.Provider
+      value={{ currentWeatherData, loading, citys, selectUi }}
+    >
+      <GetStateValueContext.Provider value={setCountryValue}>
+        <div className="App">
+          <div className="weather_app">
+            <CurrentTime>{currentDate}</CurrentTime>
+            <WeatherHeader />
+            <WeatherMain />
+          </div>
         </div>
-      </div>
+      </GetStateValueContext.Provider>
     </CurrentWeatherDataContext.Provider>
   );
 }

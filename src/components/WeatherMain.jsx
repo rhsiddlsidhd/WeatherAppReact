@@ -5,26 +5,13 @@ import StyleButton from "../StyleComponents/StyleButton";
 import { GetDispatchDataContext, GetStateValueContext } from "../App";
 
 const WeatherMain = () => {
-  const [forecastDataIndex, setForecastDataIndex] = useState(0);
-
   const { citys, selectUi, forecastData } = useContext(GetDispatchDataContext);
-  const result = forecastData.list?.slice(0, 8);
-
-  /**
-   * forecastData.list.dt , forecastData.list.main.temp , forecastData.list.weather.icon
-   *
-   *
-   * daily forecast
-   *  index 0 ~ 7 = 8개 가져오기
-   *
-   * 주간 forecast
-   *  index 7 > 11 > 15 > 19 > 23 > 27 > 31 > 35 > 39
-   *
-   */
-
   const setCityName = useContext(GetStateValueContext);
-
   const [activeIndex, setActiveIndex] = useState(null);
+  const dailyForecastData = forecastData.list?.slice(0, 8);
+  const weeklyForecastData = forecastData.list?.filter((_, index) => {
+    return index % 8 === 0;
+  });
 
   const toggleReset = () => {
     /**
@@ -44,8 +31,7 @@ const WeatherMain = () => {
               현재 날씨를 알려드립니다. (현재기준/24시간)
             </div>
             <div className="hour_forecast_api">
-              {result?.map((it, index) => {
-                console.log(it);
+              {dailyForecastData?.map((it, index) => {
                 const date = new Date(it.dt * 1000);
                 const hour = date.getHours();
                 let text = hour >= 12 ? "오후" : "오전";
@@ -83,7 +69,7 @@ const WeatherMain = () => {
           </StyleBox>
           <StyleBox width="45%" height="100%" $btnContainer>
             <div className="btnTitle">
-              <div>title</div>
+              <div>주요 도시별</div>
               <StyleButton width="1rem" height="100%" onClick={toggleReset}>
                 reset
               </StyleButton>
@@ -114,13 +100,27 @@ const WeatherMain = () => {
             주간 날씨를 알려드립니다. (12시 기준)
           </div>
           <div className="dayForecast_api">
-            <div className="dayForecast_api_items">
-              <div>월</div>
-              <div>아이콘</div>
-              <div>최저</div>
-              <div>현재</div>
-              <div>최고</div>
-            </div>
+            {weeklyForecastData?.map((it, index) => {
+              const date = new Date(it.dt * 1000);
+              const dayIndex = date.getDay();
+              const dayText = ["일", "월", "화", "수", "목", "금", "토"];
+
+              const dayOfWeek = dayText[dayIndex];
+
+              return (
+                <div key={index} className="dayForecast_api_items">
+                  <div>{dayOfWeek}</div>
+                  <img
+                    src={`https://openweathermap.org/img/wn/${it.weather[0].icon}.png`}
+                    alt="이미지"
+                  />
+
+                  <div>{it.main.temp_min}</div>
+                  <div>{it.main.temp}</div>
+                  <div>{it.main.temp_max}</div>
+                </div>
+              );
+            })}
           </div>
         </StyleBox>
       </ArticleDayForecast>

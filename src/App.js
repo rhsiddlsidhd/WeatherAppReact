@@ -84,7 +84,7 @@ function App() {
       }
     };
 
-    if (cityName == "") {
+    if (cityName === "") {
       getLatAndLog();
     } else {
       getCityNameData();

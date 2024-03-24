@@ -34,7 +34,6 @@ const BoxContainer = styled.div.attrs((props) => ({
         height: 15%;
         padding-left: 1rem;
         padding-right: 1rem;
-        color: ${({ theme }) => theme.color.gray};
         border-bottom: 1px solid ${({ theme }) => theme.color.white};
       }
       > .btns {
@@ -63,10 +62,10 @@ const BoxContainer = styled.div.attrs((props) => ({
         flex-direction: column;
         justify-content: space-around;
         > .dayForecast_api_items {
-          height: 7%;
           display: flex;
           justify-content: space-around;
           align-items: center;
+          height: 100%;
           border-bottom: 1px solid ${({ theme }) => theme.color.white};
         }
       }

@@ -1,13 +1,23 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import styled, { css } from "styled-components";
 import StyleBox from "../StyleComponents/StyleBox";
 import StyleButton from "../StyleComponents/StyleButton";
 import { GetDispatchDataContext, GetStateValueContext } from "../App";
 
 const WeatherMain = () => {
-  const { citys, selectUi, forecastData } = useContext(GetDispatchDataContext);
-  const setCityName = useContext(GetStateValueContext);
-  const [activeIndex, setActiveIndex] = useState(null);
+  const {
+    citys,
+    selectUi,
+    forecastData,
+    currentMode,
+    temperatureUnits,
+    activeIndex,
+    getCurrentDate,
+  } = useContext(GetDispatchDataContext);
+  const { setCityName, setActiveIndex } = useContext(GetStateValueContext);
+
+  const today = getCurrentDate.split(" ").shift().substring(5);
+  console.log(today);
   const dailyForecastData = forecastData.list?.slice(0, 8);
   const weeklyForecastData = forecastData.list?.filter((_, index) => {
     return index % 8 === 0;
@@ -28,7 +38,7 @@ const WeatherMain = () => {
         <FigureHourForecast>
           <StyleBox width="100%" height="90%">
             <div className="hour_forecast_title">
-              현재 날씨를 알려드립니다. (현재기준/24시간)
+              오늘 날씨를 알려드립니다. ({today} / 24시간)
             </div>
             <div className="hour_forecast_api">
               {dailyForecastData?.map((it, index) => {
@@ -44,7 +54,7 @@ const WeatherMain = () => {
                       alt="이미지"
                     />
 
-                    <div>{it.main.temp}</div>
+                    <div>{`${it.main.temp}${temperatureUnits[currentMode]}`}</div>
                   </div>
                 );
               })}
@@ -79,6 +89,7 @@ const WeatherMain = () => {
                 <StyleButton
                   key={index}
                   value={it}
+                  istoggle={true}
                   isactive={activeIndex === index ? index : null}
                   onClick={(e) => {
                     setCityName(e.target.value);
@@ -97,14 +108,13 @@ const WeatherMain = () => {
       <ArticleDayForecast>
         <StyleBox width="95%" height="100%" $dayForecast>
           <div className="dayForecast_title">
-            주간 날씨를 알려드립니다. (12시 기준)
+            주간 날씨를 알려드립니다. ({today} / 12시)
           </div>
           <div className="dayForecast_api">
             {weeklyForecastData?.map((it, index) => {
               const date = new Date(it.dt * 1000);
               const dayIndex = date.getDay();
               const dayText = ["일", "월", "화", "수", "목", "금", "토"];
-
               const dayOfWeek = dayText[dayIndex];
 
               return (
@@ -115,9 +125,9 @@ const WeatherMain = () => {
                     alt="이미지"
                   />
 
-                  <div>{it.main.temp_min}</div>
-                  <div>{it.main.temp}</div>
-                  <div>{it.main.temp_max}</div>
+                  <div>{`${it.main.temp_min}${temperatureUnits[currentMode]}`}</div>
+                  <div>{`${it.main.temp}${temperatureUnits[currentMode]}`}</div>
+                  <div>{`${it.main.temp_max}${temperatureUnits[currentMode]}`}</div>
                 </div>
               );
             })}

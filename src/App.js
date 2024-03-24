@@ -30,6 +30,14 @@ function App() {
   const [cityName, setCityName] = useState("");
   const citys = ["Seoul", "Tokyo", "Dubai", "Paris"];
   const selectUi = ["화창", "비", "눈", "흐림"];
+  const [currentMode, setCurrentMode] = useState("standard");
+  const modes = ["standard", "metric", "imperial"];
+  const temperatureUnits = {
+    standard: "K",
+    metric: "°C",
+    imperial: "°F",
+  };
+  const [activeIndex, setActiveIndex] = useState(null);
   const formattedValue = (value) => {
     return value < 10 ? `0${value}` : value;
   };
@@ -42,7 +50,7 @@ function App() {
       const day = formattedValue(date.getDate());
       const hour = formattedValue(date.getHours());
       const minute = formattedValue(date.getMinutes());
-      return `${year}-${month}-${day} ${hour}:${minute}`;
+      return `${year}.${month}.${day} ${hour}:${minute}`;
     };
 
     setInterval(() => {
@@ -57,8 +65,12 @@ function App() {
         navigator.geolocation.getCurrentPosition(async (position) => {
           const $lat = position.coords.latitude;
           const $lon = position.coords.longitude;
-          const $getWeatherData = await fetchWeatherData($lat, $lon);
-          const $forecastData = await fetchForecastApi($lat, $lon);
+          const $getWeatherData = await fetchWeatherData(
+            $lat,
+            $lon,
+            currentMode
+          );
+          const $forecastData = await fetchForecastApi($lat, $lon, currentMode);
           setWeatherData($getWeatherData);
           setForecastData($forecastData);
           setLoading(true);
@@ -89,13 +101,26 @@ function App() {
     } else {
       getCityNameData();
     }
-  }, [cityName]);
+  }, [cityName, currentMode]);
 
   return (
     <GetDispatchDataContext.Provider
-      value={{ weatherData, loading, citys, selectUi, forecastData }}
+      value={{
+        weatherData,
+        loading,
+        citys,
+        selectUi,
+        forecastData,
+        modes,
+        currentMode,
+        temperatureUnits,
+        activeIndex,
+        getCurrentDate,
+      }}
     >
-      <GetStateValueContext.Provider value={setCityName}>
+      <GetStateValueContext.Provider
+        value={{ setCityName, setCurrentMode, setActiveIndex }}
+      >
         <div className="App">
           <div className="weather_app">
             <CurrentTime>{getCurrentDate}</CurrentTime>

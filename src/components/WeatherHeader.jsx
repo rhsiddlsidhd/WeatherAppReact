@@ -1,71 +1,39 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import styled, { css } from "styled-components";
-import { GetDispatchDataContext } from "../App";
+import { GetDispatchDataContext, GetStateValueContext } from "../App";
 import StyleButton from "../StyleComponents/StyleButton";
 import Loading from "./Loading";
 
 const WeatherHeader = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const { weatherData, loading } = useContext(GetDispatchDataContext);
+  const {
+    weatherData,
+    loading,
+    modes,
+    currentMode,
+    temperatureUnits,
+    cityName,
+    activeIndex,
+  } = useContext(GetDispatchDataContext);
+
+  const { setCurrentMode, setCityName, setActiveIndex } =
+    useContext(GetStateValueContext);
 
   const { name, weather, main } = weatherData;
 
   const weatherMain = weather ? weather[0]?.main : "";
 
-  const $main = main ? main : "";
+  const temperatureChange = () => {
+    if (cityName !== "") {
+      setCityName("");
+    }
+    if (activeIndex !== null) {
+      setActiveIndex(null);
+    }
 
-  /**
-   * default kelvin
-   * 켈빈 => 화씨
-   * 화씨 => 섭씨
-   * 섭씨 => 켈빈
-   * 값들을 배열로 관리해서 인덱스로 값 추가해서 계속 가져오기
-   * 데이터는 한번만 저장하고 저장한 데이터를 가지고 순회
-   * 각 데이터의 max 와 min까지 관리해야 해서 데이터를 객체로 전환
-   * 객체로 전환한 값을 object.values 값들로 배열로 바꿔서 다시 무한순회
-   *
-   */
-
-  const convertKelvinTemperature = (tempValues) => {
-    let $tempValues = tempValues - 273.15;
-    return Number($tempValues).toFixed(2);
-  };
-
-  const convertCelsiusTemperature = (tempValues) => {
-    let $tempValues = ((tempValues - 32) * 5) / 9;
-
-    return Number($tempValues.toFixed(2));
-  };
-
-  const fahrenheitTemp = convertKelvinTemperature($main.temp);
-  const fahrenheitTempMax = convertKelvinTemperature($main.temp_max);
-  const fahrenheitTempMin = convertKelvinTemperature($main.temp_min);
-
-  const celsiusTemp = convertCelsiusTemperature($main.temp);
-  const celsiusTempMax = convertCelsiusTemperature($main.temp_max);
-  const celsiusTempMin = convertCelsiusTemperature($main.temp_min);
-
-  const formattedTempData = {
-    fahrenheit: {
-      temp: `${fahrenheitTemp}°C`,
-      temp_max: `${fahrenheitTempMax}°C`,
-      temp_min: `${fahrenheitTempMin}°C`,
-    },
-    celsius: {
-      temp: `${celsiusTemp}°F`,
-      temp_max: `${celsiusTempMax}°F`,
-      temp_min: `${celsiusTempMin}°F`,
-    },
-    kelvin: {
-      temp: `${$main.temp}K`,
-      temp_max: `${$main.temp_max}K`,
-      temp_min: `${$main.temp_min}K`,
-    },
-  };
-  const $formattedTempData = Object.values(formattedTempData);
-
-  const indexCounter = () => {
-    setCurrentIndex((currentIndex + 1) % $formattedTempData.length);
+    const currentIndex = modes.indexOf(currentMode);
+    const nextIndex = (currentIndex + 1) % modes.length;
+    console.log({ nextIndex });
+    setCurrentMode(modes[nextIndex]);
   };
 
   return (
@@ -76,32 +44,28 @@ const WeatherHeader = () => {
           <div className="temperature">
             <input
               className="temperature_calvin"
-              value={
-                $formattedTempData[currentIndex]
-                  ? `${$formattedTempData[currentIndex].temp}`
-                  : $main.temp
-              }
+              value={`${main.temp}${temperatureUnits[currentMode]}`}
               readOnly
             ></input>
             <StyleButton
               className="temperature_btn"
               width={"fit-content"}
-              onClick={indexCounter}
+              onClick={temperatureChange}
             >
-              Temperature
+              Temperature Conversion
             </StyleButton>
           </div>
           <div className="weather">{weatherMain}</div>
           <div className="temperature_high_low">
             <div>
-              {$formattedTempData[currentIndex]
-                ? `${$formattedTempData[currentIndex].temp_max}`
-                : $main.temp}
+              <h3>최고</h3>
+              {main.temp_max}
+              {temperatureUnits[currentMode]}
             </div>
             <div>
-              {$formattedTempData[currentIndex]
-                ? `${$formattedTempData[currentIndex].temp_min}`
-                : $main.temp}
+              <h3>최저</h3>
+              {main.temp_min}
+              {temperatureUnits[currentMode]}
             </div>
           </div>
         </CurrentWeather>
@@ -185,5 +149,8 @@ const CurrentWeather = styled.div`
     /* border: 1px solid brown; */
     ${$displayCenter}
     justify-content: space-between;
+    & > div > h3 {
+      ${$displayCenter}
+    }
   }
 `;

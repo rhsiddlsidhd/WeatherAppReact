@@ -41,8 +41,8 @@ const StyleBtn = styled.button.attrs((props) => ({
     margin-left: 1rem;
   }
 
-  ${({ isActive }) =>
-    isActive &&
+  ${({ isactive }) =>
+    isactive &&
     css`
       background-color: white;
       color: #228be6;

@@ -3,7 +3,11 @@ import styled from "styled-components";
 import WeatherHeader from "./components/WeatherHeader";
 import WeatherMain from "./components/WeatherMain";
 import { createContext, useEffect, useState } from "react";
-import { getCityNameData, getWeatherData } from "./utils/Api";
+import {
+  fetchForecastApi,
+  fetchCityNameData,
+  fetchWeatherData,
+} from "./utils/Api";
 // https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
 //1. 앱이 실행되자마자 현재 위치기반의 날씨가 보인다
 //2. 도시 섭씨 화씨 날씨 상태정보
@@ -22,14 +26,13 @@ function App() {
   const [getCurrentDate, setGetCurrentDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [weatherData, setWeatherData] = useState("");
+  const [forecastData, setForecastData] = useState("");
   const [cityName, setCityName] = useState("");
   const citys = ["Seoul", "Tokyo", "Dubai", "Paris"];
   const selectUi = ["화창", "비", "눈", "흐림"];
   const formattedValue = (value) => {
     return value < 10 ? `0${value}` : value;
   };
-
-  console.log("App", cityName);
 
   useEffect(() => {
     const getDate = () => {
@@ -54,8 +57,10 @@ function App() {
         navigator.geolocation.getCurrentPosition(async (position) => {
           const $lat = position.coords.latitude;
           const $lon = position.coords.longitude;
-          const $weatherData = await getWeatherData($lat, $lon);
-          setWeatherData($weatherData);
+          const $getWeatherData = await fetchWeatherData($lat, $lon);
+          const $forecastData = await fetchForecastApi($lat, $lon);
+          setWeatherData($getWeatherData);
+          setForecastData($forecastData);
           setLoading(true);
         });
       } catch (err) {
@@ -68,11 +73,11 @@ function App() {
      * useEffect 시에 호출한 Api 주소를 각 도시별 Api 주소로 변경
      * 각 도시별 Api에 따른 Ui 변경 이루어짐
      */
-    const fetchCityNameData = async () => {
+    const getCityNameData = async () => {
       try {
-        const cityNameData = await getCityNameData(cityName);
+        const $getCityNameData = await fetchCityNameData(cityName);
 
-        setWeatherData(cityNameData);
+        setWeatherData($getCityNameData);
         setLoading(true);
       } catch (err) {
         throw Error(err.message);
@@ -82,13 +87,13 @@ function App() {
     if (cityName == "") {
       getLatAndLog();
     } else {
-      fetchCityNameData();
+      getCityNameData();
     }
   }, [cityName]);
 
   return (
     <GetDispatchDataContext.Provider
-      value={{ weatherData, loading, citys, selectUi }}
+      value={{ weatherData, loading, citys, selectUi, forecastData }}
     >
       <GetStateValueContext.Provider value={setCityName}>
         <div className="App">

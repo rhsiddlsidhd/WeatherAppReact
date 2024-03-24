@@ -1,11 +1,27 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import StyleBox from "../StyleComponents/StyleBox";
 import StyleButton from "../StyleComponents/StyleButton";
 import { GetDispatchDataContext, GetStateValueContext } from "../App";
 
 const WeatherMain = () => {
-  const { citys, selectUi } = useContext(GetDispatchDataContext);
+  const [forecastDataIndex, setForecastDataIndex] = useState(0);
+
+  const { citys, selectUi, forecastData } = useContext(GetDispatchDataContext);
+  const result = forecastData.list?.slice(0, 8);
+
+  /**
+   * forecastData.list.dt , forecastData.list.main.temp , forecastData.list.weather.icon
+   *
+   *
+   * daily forecast
+   *  index 0 ~ 7 = 8개 가져오기
+   *
+   * 주간 forecast
+   *  index 7 > 11 > 15 > 19 > 23 > 27 > 31 > 35 > 39
+   *
+   */
+
   const setCityName = useContext(GetStateValueContext);
 
   const [activeIndex, setActiveIndex] = useState(null);
@@ -13,8 +29,10 @@ const WeatherMain = () => {
   const toggleReset = () => {
     /**
      * cityName 을 빈값으로 던져서 mount
+     * button isActive 초기값
      */
     setCityName("");
+    setActiveIndex(null);
   };
 
   return (
@@ -22,13 +40,28 @@ const WeatherMain = () => {
       <ArticleHourForecast>
         <FigureHourForecast>
           <StyleBox width="100%" height="90%">
-            <div className="hour_forecast_title">예상됩니다</div>
+            <div className="hour_forecast_title">
+              현재 날씨를 알려드립니다. (현재기준/24시간)
+            </div>
             <div className="hour_forecast_api">
-              <div className="hour_forecast_api_item">
-                <div>오전10시</div>
-                <div>아이콘</div>
-                <div>15도</div>
-              </div>
+              {result?.map((it, index) => {
+                console.log(it);
+                const date = new Date(it.dt * 1000);
+                const hour = date.getHours();
+                let text = hour >= 12 ? "오후" : "오전";
+
+                return (
+                  <div className="hour_forecast_api_item" key={index}>
+                    <div>{`${text}${hour}시`}</div>
+                    <img
+                      src={`https://openweathermap.org/img/wn/${it.weather[0].icon}.png`}
+                      alt="이미지"
+                    />
+
+                    <div>{it.main.temp}</div>
+                  </div>
+                );
+              })}
             </div>
           </StyleBox>
         </FigureHourForecast>
@@ -60,7 +93,7 @@ const WeatherMain = () => {
                 <StyleButton
                   key={index}
                   value={it}
-                  isActive={activeIndex === index}
+                  isactive={activeIndex === index ? index : null}
                   onClick={(e) => {
                     setCityName(e.target.value);
                     setActiveIndex(index);
@@ -77,7 +110,9 @@ const WeatherMain = () => {
       </ArticleHourForecast>
       <ArticleDayForecast>
         <StyleBox width="95%" height="100%" $dayForecast>
-          <div className="dayForecast_title">title</div>
+          <div className="dayForecast_title">
+            주간 날씨를 알려드립니다. (12시 기준)
+          </div>
           <div className="dayForecast_api">
             <div className="dayForecast_api_items">
               <div>월</div>
@@ -134,6 +169,7 @@ const FigureHourForecast = styled.div`
   .hour_forecast_api {
     height: 70%;
     display: flex;
+    justify-content: space-between;
     overflow: scroll;
 
     &::-webkit-scrollbar {

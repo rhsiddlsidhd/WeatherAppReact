@@ -1,6 +1,6 @@
 const APIKEY = process.env.REACT_APP_APIKEY;
 
-export const getWeatherData = async ($lat, $lon) => {
+export const fetchWeatherData = async ($lat, $lon) => {
   try {
     const url = new URL(
       `https://api.openweathermap.org/data/2.5/weather?lat=${$lat}&lon=${$lon}&appid=${APIKEY}`
@@ -14,7 +14,7 @@ export const getWeatherData = async ($lat, $lon) => {
   }
 };
 
-export const getCityNameData = async (cityName) => {
+export const fetchCityNameData = async (cityName) => {
   try {
     const url =
       new URL(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${APIKEY}
@@ -23,6 +23,23 @@ export const getCityNameData = async (cityName) => {
     const res = await fetch(url);
     const data = res.json();
 
+    return data;
+  } catch (err) {
+    throw Error(err.message);
+  }
+};
+
+/**
+ * forecast api
+ */
+
+export const fetchForecastApi = async ($lat, $lon) => {
+  try {
+    const url = new URL(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${$lat}&lon=${$lon}&appid=${APIKEY}&units=metric`
+    );
+    const res = await fetch(url);
+    const data = res.json();
     return data;
   } catch (err) {
     throw Error(err.message);

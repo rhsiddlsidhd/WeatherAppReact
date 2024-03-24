@@ -2,14 +2,21 @@ import React, { useContext } from "react";
 import styled, { css } from "styled-components";
 import StyleBox from "../StyleComponents/StyleBox";
 import StyleButton from "../StyleComponents/StyleButton";
-import { CurrentWeatherDataContext, GetStateValueContext } from "../App";
+import { GetDispatchDataContext, GetStateValueContext } from "../App";
 
 const WeatherMain = () => {
-  const { citys, selectUi } = useContext(CurrentWeatherDataContext);
-  const setCountryValue = useContext(GetStateValueContext);
+  const { citys, selectUi } = useContext(GetDispatchDataContext);
+  const setCityName = useContext(GetStateValueContext);
 
   const test = (e) => {
-    setCountryValue(e.target.value);
+    setCityName(e.target.value);
+  };
+
+  const toggleReset = () => {
+    /**
+     * cityName 을 빈값으로 던져서 mount
+     */
+    setCityName("");
   };
 
   return (
@@ -46,7 +53,7 @@ const WeatherMain = () => {
           <StyleBox width="45%" height="100%" $btnContainer>
             <div className="btnTitle">
               <div>title</div>
-              <StyleButton width="1rem" height="100%">
+              <StyleButton width="1rem" height="100%" onClick={toggleReset}>
                 reset
               </StyleButton>
             </div>

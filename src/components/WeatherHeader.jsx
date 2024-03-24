@@ -1,14 +1,14 @@
 import React, { useContext, useState } from "react";
 import styled, { css } from "styled-components";
-import { CurrentWeatherDataContext } from "../App";
+import { GetDispatchDataContext } from "../App";
 import StyleButton from "../StyleComponents/StyleButton";
 import Loading from "./Loading";
 
 const WeatherHeader = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { currentWeatherData, loading } = useContext(CurrentWeatherDataContext);
+  const { weatherData, loading } = useContext(GetDispatchDataContext);
 
-  const { name, weather, main } = currentWeatherData;
+  const { name, weather, main } = weatherData;
 
   const weatherMain = weather ? weather[0]?.main : "";
 

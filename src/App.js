@@ -12,23 +12,24 @@ import { getCityNameData, getWeatherData } from "./utils/Api";
 //5. 현재 위치 기반 날씨버튼을 클릭하면 다시 현재위치 기반으로 돌아온다.
 //6. 데이터를 들고오는 동안 로딩 스피너가 보인다.
 
-export const CurrentWeatherDataContext = createContext();
+export const GetDispatchDataContext = createContext();
 export const GetStateValueContext = createContext();
+
 function App() {
   /**
    * 현재 시간 구하기
    */
-  const [currentDate, setCurrentDate] = useState("");
+  const [getCurrentDate, setGetCurrentDate] = useState("");
   const [loading, setLoading] = useState(false);
-  const [currentWeatherData, setCurrentWeatherData] = useState("");
-  const [countryValue, setCountryValue] = useState("");
+  const [weatherData, setWeatherData] = useState("");
+  const [cityName, setCityName] = useState("");
   const citys = ["Seoul", "Tokyo", "Dubai", "Paris"];
   const selectUi = ["화창", "비", "눈", "흐림"];
   const formattedValue = (value) => {
     return value < 10 ? `0${value}` : value;
   };
 
-  console.log("App", currentWeatherData);
+  console.log("App", cityName);
 
   useEffect(() => {
     const getDate = () => {
@@ -42,8 +43,8 @@ function App() {
     };
 
     setInterval(() => {
-      const currentDate = getDate();
-      setCurrentDate(currentDate);
+      const date = getDate();
+      setGetCurrentDate(date);
     }, 1000);
   }, []);
 
@@ -54,7 +55,7 @@ function App() {
           const $lat = position.coords.latitude;
           const $lon = position.coords.longitude;
           const $weatherData = await getWeatherData($lat, $lon);
-          setCurrentWeatherData($weatherData);
+          setWeatherData($weatherData);
           setLoading(true);
         });
       } catch (err) {
@@ -69,36 +70,36 @@ function App() {
      */
     const fetchCityNameData = async () => {
       try {
-        const cityNameData = await getCityNameData(countryValue);
+        const cityNameData = await getCityNameData(cityName);
 
-        setCurrentWeatherData(cityNameData);
+        setWeatherData(cityNameData);
         setLoading(true);
       } catch (err) {
         throw Error(err.message);
       }
     };
 
-    if (countryValue == "") {
+    if (cityName == "") {
       getLatAndLog();
     } else {
       fetchCityNameData();
     }
-  }, [countryValue]);
+  }, [cityName]);
 
   return (
-    <CurrentWeatherDataContext.Provider
-      value={{ currentWeatherData, loading, citys, selectUi }}
+    <GetDispatchDataContext.Provider
+      value={{ weatherData, loading, citys, selectUi }}
     >
-      <GetStateValueContext.Provider value={setCountryValue}>
+      <GetStateValueContext.Provider value={setCityName}>
         <div className="App">
           <div className="weather_app">
-            <CurrentTime>{currentDate}</CurrentTime>
+            <CurrentTime>{getCurrentDate}</CurrentTime>
             <WeatherHeader />
             <WeatherMain />
           </div>
         </div>
       </GetStateValueContext.Provider>
-    </CurrentWeatherDataContext.Provider>
+    </GetDispatchDataContext.Provider>
   );
 }
 

@@ -14,10 +14,10 @@ export const getWeatherData = async ($lat, $lon) => {
   }
 };
 
-export const getCityNameData = async (countryValue) => {
+export const getCityNameData = async (cityName) => {
   try {
     const url =
-      new URL(`https://api.openweathermap.org/data/2.5/weather?q=${countryValue}&appid=${APIKEY}
+      new URL(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${APIKEY}
   `);
 
     const res = await fetch(url);

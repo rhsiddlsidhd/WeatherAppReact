@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styled, { css } from "styled-components";
 import StyleBox from "../StyleComponents/StyleBox";
 import StyleButton from "../StyleComponents/StyleButton";
@@ -8,9 +8,7 @@ const WeatherMain = () => {
   const { citys, selectUi } = useContext(GetDispatchDataContext);
   const setCityName = useContext(GetStateValueContext);
 
-  const test = (e) => {
-    setCityName(e.target.value);
-  };
+  const [activeIndex, setActiveIndex] = useState(null);
 
   const toggleReset = () => {
     /**
@@ -62,7 +60,11 @@ const WeatherMain = () => {
                 <StyleButton
                   key={index}
                   value={it}
-                  onClick={test}
+                  isActive={activeIndex === index}
+                  onClick={(e) => {
+                    setCityName(e.target.value);
+                    setActiveIndex(index);
+                  }}
                   width="4rem"
                   height="2rem"
                 >

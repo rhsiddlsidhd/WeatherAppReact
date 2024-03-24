@@ -171,10 +171,6 @@ const CurrentWeather = styled.div`
         font-size: ${({ theme }) => theme.fontSize.lg};
       }
     }
-    & > .temperature_btn {
-      border: 1px solid black;
-      ${$displayCenter}
-    }
   }
 
   & > .weather {

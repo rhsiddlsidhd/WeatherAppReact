@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const StyleButton = ({ children, ...rest }) => {
   return <StyleBtn {...rest}>{children}</StyleBtn>;
@@ -40,4 +40,11 @@ const StyleBtn = styled.button.attrs((props) => ({
   & + & {
     margin-left: 1rem;
   }
+
+  ${({ isActive }) =>
+    isActive &&
+    css`
+      background-color: white;
+      color: #228be6;
+    `}
 `;
